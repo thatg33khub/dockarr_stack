@@ -1,0 +1,147 @@
+version: "2.1"
+
+services:
+
+  nzbget:
+    image: lscr.io/linuxserver/nzbget:latest
+    container_name: nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+      - NZBGET_USER=${NZBGET_USER} #optional
+      - NZBGET_PASS=${NZBGET_PASS} #optional
+    volumes:
+      - /appdata/nzbget/config:/config
+      - ${download_folder}:/downloads
+    ports:
+      - 6789:6789
+    restart: unless-stopped
+
+  transmission:
+    image: linuxserver/transmission:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+      - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
+    volumes:
+      - /appdata/transmission:/config
+      - ${download_folder}:/downloads
+      - ${watch_folder}:/watch
+    ports:
+      - 9099:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+    volumes:
+      - /appdata/radarr/config:/config
+      - ${movie_folder}:/movies
+      - ${download_folder}:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+    volumes:
+      - /appdata/sonarr/config:/config
+      - ${show_folder}:/shows
+      - ${download_folder}:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+    volumes:
+      - /appdata/lidarr/config:/config
+      - ${music_folder}:/music
+      - ${download_folder}:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+    volumes:
+      - /appdata/bazarr/config:/config
+      - ${movie_folder}:/movies
+      - ${show_folder}:/shows
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Zurich
+      - AUTO_UPDATE=true #optional
+    volumes:
+      - /appdata/jackett:/config
+      - ${download_folder}:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+
+#  prowlarr:
+#    image: lscr.io/linuxserver/prowlarr:develop
+#    container_name: prowlarr
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=Europe/Zurich
+#    volumes:
+#      - /appdata/prowlarr:/config
+#    ports:
+#      - 9696:9696
+#    restart: unless-stopped
+
+#  organizr:
+#    container_name: organizr
+#    hostname: organizr
+#    image: organizr/organizr:latest
+#    restart: unless-stopped
+#    ports:
+#        - 80:80
+#    volumes:
+#        - /appdata/organizr:/config
+#    environment:
+#        - PUID=1000
+#        - PGID=1000
+#        - TZ=Europe/Zurich
+
+  watchtower:
+    image: containrrr/watchtower
+    environment:
+      - TZ=Europe/Zurich
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
