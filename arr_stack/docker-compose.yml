@@ -8,11 +8,11 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
       - NZBGET_USER=${NZBGET_USER} #optional
       - NZBGET_PASS=${NZBGET_PASS} #optional
     volumes:
-      - /appdata/nzbget/config:/config
+      - ${appdata_folder}/nzbget/config:/config
       - ${download_folder}:/downloads
     ports:
       - 6789:6789
@@ -23,10 +23,10 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
       - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
     volumes:
-      - /appdata/transmission:/config
+      - ${appdata_folder}/transmission:/config
       - ${download_folder}:/downloads
       - ${watch_folder}:/watch
     ports:
@@ -41,9 +41,9 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
     volumes:
-      - /appdata/radarr/config:/config
+      - ${appdata_folder}/radarr/config:/config
       - ${movie_folder}:/movies
       - ${download_folder}:/downloads
     ports:
@@ -56,9 +56,9 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
     volumes:
-      - /appdata/sonarr/config:/config
+      - ${appdata_folder}/sonarr/config:/config
       - ${show_folder}:/shows
       - ${download_folder}:/downloads
     ports:
@@ -71,9 +71,9 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
     volumes:
-      - /appdata/lidarr/config:/config
+      - ${appdata_folder}/lidarr/config:/config
       - ${music_folder}:/music
       - ${download_folder}:/downloads
     ports:
@@ -86,9 +86,9 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
     volumes:
-      - /appdata/bazarr/config:/config
+      - ${appdata_folder}/bazarr/config:/config
       - ${movie_folder}:/movies
       - ${show_folder}:/shows
     ports:
@@ -101,10 +101,10 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
       - AUTO_UPDATE=true #optional
     volumes:
-      - /appdata/jackett:/config
+      - ${appdata_folder}/jackett:/config
       - ${download_folder}:/downloads
     ports:
       - 9117:9117
@@ -116,9 +116,9 @@ services:
 #    environment:
 #      - PUID=1000
 #      - PGID=1000
-#      - TZ=Europe/Zurich
+#      - TZ=${TZ}
 #    volumes:
-#      - /appdata/prowlarr:/config
+#      - ${appdata_folder}/prowlarr:/config
 #    ports:
 #      - 9696:9696
 #    restart: unless-stopped
@@ -131,16 +131,16 @@ services:
 #    ports:
 #        - 80:80
 #    volumes:
-#        - /appdata/organizr:/config
+#        - ${appdata_folder}/organizr:/config
 #    environment:
 #        - PUID=1000
 #        - PGID=1000
-#        - TZ=Europe/Zurich
+#        - TZ=${TZ}
 
   watchtower:
     image: containrrr/watchtower
     environment:
-      - TZ=Europe/Zurich
+      - TZ=${TZ}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
