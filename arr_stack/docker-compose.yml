@@ -110,6 +110,21 @@ services:
       - 9117:9117
     restart: unless-stopped
 
+  nzbhydra2:
+    image: lscr.io/linuxserver/nzbhydra2:latest
+    container_name: nzbhydra2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      -  ${appdata_folder}/nzbhydra2/config:/config
+      - ${download_folder}:/downloads
+    ports:
+      - 5076:5076
+    restart: unless-stopped
+
+
 #  prowlarr:
 #    image: lscr.io/linuxserver/prowlarr:develop
 #    container_name: prowlarr
