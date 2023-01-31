@@ -6,8 +6,8 @@ services:
     image: lscr.io/linuxserver/nzbget:latest
     container_name: nzbget
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
       - NZBGET_USER=${NZBGET_USER} #optional
       - NZBGET_PASS=${NZBGET_PASS} #optional
@@ -21,8 +21,8 @@ services:
   transmission:
     image: linuxserver/transmission:latest
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
       - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
     volumes:
@@ -39,8 +39,8 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${appdata_folder}/radarr/config:/config
@@ -54,8 +54,8 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${appdata_folder}/sonarr/config:/config
@@ -69,8 +69,8 @@ services:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${appdata_folder}/lidarr/config:/config
@@ -84,8 +84,8 @@ services:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${appdata_folder}/bazarr/config:/config
@@ -99,8 +99,8 @@ services:
     image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
       - AUTO_UPDATE=true #optional
     volumes:
@@ -114,14 +114,34 @@ services:
     image: lscr.io/linuxserver/nzbhydra2:latest
     container_name: nzbhydra2
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/London
     volumes:
-      -  ${appdata_folder}/nzbhydra2/config:/config
+      - ${appdata_folder}/nzbhydra2/config:/config
       - ${download_folder}:/downloads
     ports:
       - 5076:5076
+    restart: unless-stopped
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+    ports:
+      - 5056:5055
+    volumes:
+      - ${appdata_folder}/jellyseer:/app/config
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
 
@@ -129,8 +149,8 @@ services:
 #    image: lscr.io/linuxserver/prowlarr:develop
 #    container_name: prowlarr
 #    environment:
-#      - PUID=1000
-#      - PGID=1000
+#      - PUID=${PUID}
+#      - PGID=${PGID}
 #      - TZ=${TZ}
 #    volumes:
 #      - ${appdata_folder}/prowlarr:/config
@@ -148,15 +168,7 @@ services:
 #    volumes:
 #        - ${appdata_folder}/organizr:/config
 #    environment:
-#        - PUID=1000
-#        - PGID=1000
+#        - PUID=${PUID}
+#        - PGID=${PGID}
 #        - TZ=${TZ}
-
-  watchtower:
-    image: containrrr/watchtower
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
 
