@@ -1,6 +1,6 @@
 # dockarr_stack
 
-Docker compose and template of .env files for all the "*arr" suite.
+Docker compose and template of .env file for all the "*arr" suite.
 
 The downloaders are:
 - nzbget for usenet
