@@ -1,7 +1,7 @@
 # dockarr_stack
 
 This repo includes a docker-compose file running most of the "*arr" applications.
-It is build around Jellyseer but you can easily adapt it for Plex.
+It is build around Jellyseerr but you can easily adapt it for Plex.
 
 ## How to use it
 
@@ -19,11 +19,13 @@ The downloaders are:
 - transmission for torrents
 
 The clients are:
+- jellyseerr to manage requests
 - radarr for movies
 - sonarr for TV shows
 - lidarr for music
 - bazarr for movie subtitles
-- jackett to enable search on torrent sites
+- jackett and nzbhydra2 to enable search on torrent sites
+
 
 Watchtower will automatically update all the containers
 
