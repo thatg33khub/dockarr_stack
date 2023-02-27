@@ -2,20 +2,34 @@ version: "2.1"
 
 services:
 
-  nzbget:
-    image: lscr.io/linuxserver/nzbget:latest
-    container_name: nzbget
+#  nzbget:
+#    image: lscr.io/linuxserver/nzbget:latest
+#    container_name: nzbget
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#      - NZBGET_USER=${NZBGET_USER} #optional
+#      - NZBGET_PASS=${NZBGET_PASS} #optional
+#    volumes:
+#      - ${appdata_folder}/nzbget/config:/config
+#      - ${download_folder}:/downloads
+#    ports:
+#      - 6789:6789
+#    restart: unless-stopped
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - NZBGET_USER=${NZBGET_USER} #optional
-      - NZBGET_PASS=${NZBGET_PASS} #optional
     volumes:
-      - ${appdata_folder}/nzbget/config:/config
+      - ${appdata_folder}/sabnzbd:/config
       - ${download_folder}:/downloads
     ports:
-      - 6789:6789
+      - 8080:8080
     restart: unless-stopped
 
   transmission:
