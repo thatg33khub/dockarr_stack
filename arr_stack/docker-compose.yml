@@ -38,7 +38,6 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-#      - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
     volumes:
       - ${appdata_folder}/transmission:/config
       - ${download_folder}:/downloads
