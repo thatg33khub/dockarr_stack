@@ -12,12 +12,14 @@ services:
     volumes:
       - ${appdata_folder}/sabnzbd:/config
       - ${download_folder}:/downloads
-    ports:
-      - 8080:8080
+#    ports:         # moved to gluetun
+#      - 8080:8080
     restart: unless-stopped
+    network_mode: "service:gluetun"
 
   transmission:
     image: linuxserver/transmission:latest
+    container_name: transmission
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -26,11 +28,12 @@ services:
       - ${appdata_folder}/transmission:/config
       - ${download_folder}:/downloads
       - ${watch_folder}:/watch
-    ports:
-      - 9099:9091
-      - 51413:51413
-      - 51413:51413/udp
+#    ports:         # moved to gluetun
+#      - 9099:9091
+#      - 51413:51413
+#      - 51413:51413/udp
     restart: unless-stopped
+    network_mode: "service:gluetun"
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -133,13 +136,30 @@ services:
       - ${appdata_folder}/jellyseer:/app/config
     restart: unless-stopped
 
-#  watchtower:
-#    image: containrrr/watchtower
-#    environment:
-#      - TZ=${TZ}
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    restart: unless-stopped
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+      - 8080:8080 #sabnzbd
+      - 9099:9091 #transmission
+      - 51413:51413 #transmission
+      - 51413:51413/udp #transmission
+    volumes:
+      - ${appdata_folder}/gluetun:/gluetun
+    environment:
+      # See https://github.com/qdm12/gluetun/wiki
+      - TZ=${TZ}
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
 
 #  prowlarr:
 #    image: lscr.io/linuxserver/prowlarr:develop
@@ -167,20 +187,4 @@ services:
 #        - PUID=${PUID}
 #        - PGID=${PGID}
 #        - TZ=${TZ}
-
-#  nzbget:
-#    image: lscr.io/linuxserver/nzbget:latest
-#    container_name: nzbget
-#    environment:
-#      - PUID=${PUID}
-#      - PGID=${PGID}
-#      - TZ=${TZ}
-#      - NZBGET_USER=${NZBGET_USER} #optional
-#      - NZBGET_PASS=${NZBGET_PASS} #optional
-#    volumes:
-#      - ${appdata_folder}/nzbget/config:/config
-#      - ${download_folder}:/downloads
-#    ports:
-#      - 6789:6789
-#    restart: unless-stopped
 
