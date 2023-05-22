@@ -160,6 +160,7 @@ services:
       - OPENVPN_USER=${OPENVPN_USER}
       - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+    restart: unless-stopped
 
 #  prowlarr:
 #    image: lscr.io/linuxserver/prowlarr:develop
