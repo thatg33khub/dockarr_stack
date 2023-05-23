@@ -15,7 +15,7 @@ It is build around Jellyseerr but you can easily adapt it for Plex.
 
 ## What's inside
 The downloaders are:
-- nzbget for usenet
+- sabnzb for usenet
 - transmission for torrents
 
 The clients are:
@@ -26,6 +26,8 @@ The clients are:
 - bazarr for movie subtitles
 - jackett and nzbhydra2 to enable search on torrent sites
 
+The downloaders are hidden behind a VPN using Gluetun. Please check Gluetun wiki to set it up (https://github.com/qdm12/gluetun/wiki).
+If you don't want to use a VPN, just enable the ports on sabnzb and transmission and delete the Gluetun service.
 
-Watchtower will automatically update all the containers
+Prowlarr and organizr compose are ready if you want to use them.
 
