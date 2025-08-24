@@ -1,0 +1,19 @@
+#version: "3"
+services:
+  handbrake:
+    image: jlesage/handbrake
+    ports:
+      - ${handbrake_port}:5800
+    volumes:
+      - ${appdata}:/config:rw
+      - ${public_medias}/handbrake/in:/storage:ro
+      - ${public_medias}/handbrake/watch:/watch:rw
+      - ${public_medias}/handbrake/out:/output:rw
+    cpus: 0.5
+    mem_limit: 1024m
+    restart: unless-stopped
+    networks:
+      - dockernet
+networks:
+  dockernet:
+    external: true

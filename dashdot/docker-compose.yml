@@ -1,0 +1,19 @@
+#version: "3.5"
+services:
+  dash:
+    image: mauricenino/dashdot:latest
+    restart: unless-stopped
+    privileged: true
+    environment:
+      #      DASHDOT_ENABLE_CPU_TEMPS: 'true'
+      DASHDOT_ENABLE_STORAGE_SPLIT_VIEW: "true"
+      DASHDOT_ALWAYS_SHOW_PERCENTAGES: "true"
+    ports:
+      - ${dashdot_port}:3001
+    volumes:
+      - /:/mnt/host:ro
+    networks:
+      - dockernet
+networks:
+  dockernet:
+    external: true

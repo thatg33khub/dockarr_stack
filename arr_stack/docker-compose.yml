@@ -1,43 +1,5 @@
-version: "2.1"
-
+#version: "2.1"
 services:
-
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: sabnzbd
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${appdata_folder}/sabnzbd:/config
-      - ${download_folder}:/downloads
-#    ports:         # moved to gluetun
-#      - 8080:8080
-    restart: unless-stopped
-    depends_on:
-      - gluetun
-    network_mode: "service:gluetun"
-
-  transmission:
-    image: linuxserver/transmission:latest
-    container_name: transmission
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${appdata_folder}/transmission:/config
-      - ${download_folder}:/downloads
-      - ${watch_folder}:/watch
-#    ports:         # moved to gluetun
-#      - 9099:9091
-#      - 51413:51413
-#      - 51413:51413/udp
-    restart: unless-stopped
-    depends_on:
-      - gluetun
-    network_mode: "service:gluetun"
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -47,12 +9,14 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${appdata_folder}/radarr/config:/config
+      - ${appdata}/radarr/config:/config
       - ${movie_folder}:/movies
       - ${download_folder}:/downloads
     ports:
-      - 7878:7878
+      - ${radarr_port}:7878
     restart: unless-stopped
+    networks:
+      - arr_stack
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -62,27 +26,14 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${appdata_folder}/sonarr/config:/config
+      - ${appdata}/sonarr/config:/config
       - ${show_folder}:/shows
       - ${download_folder}:/downloads
     ports:
-      - 8989:8989
+      - ${sonarr_port}:8989
     restart: unless-stopped
-
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${appdata_folder}/lidarr/config:/config
-      - ${music_folder}:/music
-      - ${download_folder}:/downloads
-    ports:
-      - 8686:8686
-    restart: unless-stopped
+    networks:
+      - arr_stack
 
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -92,40 +43,28 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${appdata_folder}/bazarr/config:/config
+      - ${appdata}/bazarr/config:/config
       - ${movie_folder}:/movies
       - ${show_folder}:/shows
     ports:
-      - 6767:6767
+      - ${bazarr_port}:6767
     restart: unless-stopped
+    networks:
+      - arr_stack
 
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - AUTO_UPDATE=true #optional
     volumes:
-      - ${appdata_folder}/jackett:/config
+      - /${appdata}/lidarr:/config
+      - ${music_folder}:/music
       - ${download_folder}:/downloads
     ports:
-      - 9117:9117
-    restart: unless-stopped
-
-  nzbhydra2:
-    image: lscr.io/linuxserver/nzbhydra2:latest
-    container_name: nzbhydra2
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/London
-    volumes:
-      - ${appdata_folder}/nzbhydra2/config:/config
-      - ${download_folder}:/downloads
-    ports:
-      - 5076:5076
+      - ${lidarr_port}:8686
     restart: unless-stopped
 
   jellyseerr:
@@ -135,61 +74,28 @@ services:
       - LOG_LEVEL=debug
       - TZ=${TZ}
     ports:
-      - 5056:5055
+      - ${jellyseerr_port}:5055
     volumes:
-      - ${appdata_folder}/jellyseer:/app/config
+      - ${appdata}/jellyseer:/app/config
     restart: unless-stopped
+    networks:
+      - arr_stack
 
-  gluetun:
-    image: qmcgaw/gluetun
-    container_name: gluetun
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    ports:
-      - 8888:8888/tcp # HTTP proxy
-      - 8388:8388/tcp # Shadowsocks
-      - 8388:8388/udp # Shadowsocks
-      - 8080:8080 #sabnzbd
-      - 9099:9091 #transmission
-      - 51413:51413 #transmission
-      - 51413:51413/udp #transmission
-    volumes:
-      - ${appdata_folder}/gluetun:/gluetun
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
     environment:
-      # See https://github.com/qdm12/gluetun/wiki
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
-      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
-      - OPENVPN_USER=${OPENVPN_USER}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+    volumes:
+      - ${appdata}/prowlarr:/config
+    ports:
+      - ${prowlarr_port}:9696
     restart: unless-stopped
+    networks:
+      - arr_stack
 
-#  prowlarr:
-#    image: lscr.io/linuxserver/prowlarr:develop
-#    container_name: prowlarr
-#    environment:
-#      - PUID=${PUID}
-#      - PGID=${PGID}
-#      - TZ=${TZ}
-#    volumes:
-#      - ${appdata_folder}/prowlarr:/config
-#    ports:
-#      - 9696:9696
-#    restart: unless-stopped
-
-#  organizr:
-#    container_name: organizr
-#    hostname: organizr
-#    image: organizr/organizr:latest
-#    restart: unless-stopped
-#    ports:
-#        - 80:80
-#    volumes:
-#        - ${appdata_folder}/organizr:/config
-#    environment:
-#        - PUID=${PUID}
-#        - PGID=${PGID}
-#        - TZ=${TZ}
-
+networks:
+  arr_stack:
+    external: true
