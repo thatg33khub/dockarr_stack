@@ -1,1 +1,0 @@
-/mnt/appdata/start-stop-restart_all_containers.sh
