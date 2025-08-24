@@ -32,8 +32,12 @@ The clients are:
 - jellyseerr to manage requests
 - radarr for movies
 - sonarr for TV shows
+- lidarr for music
 - bazarr for movie subtitles
 - prowlaar to enable search on torrent sites
 
 The downloaders are hidden behind a VPN using Gluetun. Please check Gluetun wiki to set it up (https://github.com/qdm12/gluetun/wiki).
 If you don't want to use a VPN, just enable the ports on sabnzb and qbittorent and delete the Gluetun service.
+
+Prowlarr and organizr compose are ready if you want to use them.
+
