@@ -1,0 +1,1 @@
+/mnt/appdata/restart_all_containers.sh

@@ -3,6 +3,22 @@ PUID=1000
 PGID=1000
 TZ=Europe/Zurich
 
+# Ports
+bazarr_port=6767
+flaresolverr_port=8191
+jackett_port=9117
+jellyseerr_port=5055
+lidarr_port=8686
+prowlarr_port=9696
+radarr_port=7878
+sonarr_port=8989
+### download
+gluetun_http=8888
+gluetun_tcp_udp=8388
+gluetun_sabnzbd=8081
+gluetun_qbittorent_ui=8082
+gluetun_qbittorent_tcp_udp=6881
+
 # Folders
 appdata_folder="/path/to/appdata"
 download_folder="/path/to/download"
