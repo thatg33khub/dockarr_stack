@@ -7,3 +7,8 @@ services:
       - ${metube_port}:8081
     volumes:
       - ${download_folder}:/downloads
+    networks:
+      - dockernet
+networks:
+  dockernet:
+    external: true
