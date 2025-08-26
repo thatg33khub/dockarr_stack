@@ -3,6 +3,7 @@
 services:
   watchtower:
     image: containrrr/watchtower
+    container_name: watchtower
     environment:
       - TZ=${TZ}
     volumes:
