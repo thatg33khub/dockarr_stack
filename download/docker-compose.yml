@@ -11,7 +11,7 @@ services:
       - ${gluetun_http}:8888/tcp # HTTP proxy
       - ${gluetun_tcp_udp}:8388/tcp # Shadowsocks
       - ${gluetun_tcp_udp}:8388/udp # Shadowsocks
-      - ${gluetun_sabnzbd}:8080 #sabnzbd
+#      - ${gluetun_sabnzbd}:8080 #sabnzbd
       - ${gluetun_qbittorent_ui}:8082 #qbittorent
       - ${gluetun_qbittorent_tcp_udp}:6881 #qbittorent
       - ${gluetun_qbittorent_tcp_udp}:6881/udp #qbittorent
@@ -28,23 +28,23 @@ services:
     networks:
       - dockernet
 
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: sabnzbd
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${appdata}/sabnzbd:/config
-      - ${download_folder}:/downloads
-    #   ports:         # moved to gluetun
-    #     - 8080:8080
-    restart: unless-stopped
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    network_mode: service:gluetun
+#  sabnzbd:
+#    image: lscr.io/linuxserver/sabnzbd:latest
+#    container_name: sabnzbd
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#    volumes:
+#      - ${appdata}/sabnzbd:/config
+#      - ${download_folder}:/downloads
+#    #   ports:         # moved to gluetun
+#    #     - 8080:8080
+#    restart: unless-stopped
+#    depends_on:
+#      gluetun:
+#        condition: service_healthy
+#    network_mode: service:gluetun
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
